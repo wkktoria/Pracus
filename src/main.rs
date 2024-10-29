@@ -11,14 +11,24 @@ struct Args {
     /// Run GUI
     #[arg(long, default_value_t = false)]
     gui: bool,
+
+    #[arg(long, default_value_t = String::from("java"))]
+    tech: String,
 }
 
 fn main() {
     let args = Args::parse();
 
-    let mut job_offers = job_offers_scraper::scrap_justjoinit_job_offers();
-    job_offers.append(&mut job_offers_scraper::scrap_nofluffjobs_job_offers());
-    job_offers.append(&mut job_offers_scraper::scrap_pracujpl_job_offers());
+    let tech = args.tech;
+    let available_techs = ["java".to_string(), "python".to_string()];
+
+    if !available_techs.contains(&tech) {
+        panic!("Unavailable tech");
+    }
+
+    let mut job_offers = job_offers_scraper::scrap_justjoinit_job_offers(&tech);
+    job_offers.append(&mut job_offers_scraper::scrap_nofluffjobs_job_offers(&tech));
+    job_offers.append(&mut job_offers_scraper::scrap_pracujpl_job_offers(&tech));
 
     if !args.csv && !args.gui {
         panic!("Run with --csv or --gui option")

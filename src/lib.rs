@@ -119,12 +119,17 @@ pub mod job_offers_scraper {
         }
     }
 
-    pub fn scrap_justjoinit_job_offers() -> Vec<JobOffer> {
+    pub fn scrap_justjoinit_job_offers(tech: &String) -> Vec<JobOffer> {
         let mut job_offers: Vec<JobOffer> = Vec::new();
 
-        let response = reqwest::blocking::get(
-            "https://justjoin.it/job-offers/all-locations/java?experience-level=junior",
-        );
+        let response = match tech.as_str() {
+            "java" | "python" => reqwest::blocking::get(format!(
+                "https://justjoin.it/job-offers/all-locations/{tech}?experience-level=junior"
+            )),
+            _ => reqwest::blocking::get(
+                "https://justjoin.it/job-offers/all-locations/java?experience-level=junior",
+            ),
+        };
         let html_content = response.unwrap().text().unwrap();
         let document = scraper::Html::parse_document(&html_content);
 
@@ -168,12 +173,17 @@ pub mod job_offers_scraper {
         return job_offers;
     }
 
-    pub fn scrap_nofluffjobs_job_offers() -> Vec<JobOffer> {
+    pub fn scrap_nofluffjobs_job_offers(tech: &String) -> Vec<JobOffer> {
         let mut job_offers: Vec<JobOffer> = Vec::new();
 
-        let response = reqwest::blocking::get(
-            "https://nofluffjobs.com/pl/Java?criteria=seniority%3Dtrainee%2Cjunior",
-        );
+        let response = match tech.as_str() {
+            "java" | "python" => reqwest::blocking::get(format!(
+                "https://nofluffjobs.com/pl/{tech}?criteria=seniority%3Dtrainee%2Cjunior"
+            )),
+            _ => reqwest::blocking::get(
+                "https://nofluffjobs.com/pl/java?criteria=seniority%3Dtrainee%2Cjunior",
+            ),
+        };
         let html_content = response.unwrap().text().unwrap();
         let document = scraper::Html::parse_document(&html_content);
 
@@ -212,10 +222,14 @@ pub mod job_offers_scraper {
         return job_offers;
     }
 
-    pub fn scrap_pracujpl_job_offers() -> Vec<JobOffer> {
+    pub fn scrap_pracujpl_job_offers(tech: &String) -> Vec<JobOffer> {
         let mut job_offers: Vec<JobOffer> = Vec::new();
 
-        let response = reqwest::blocking::get("https://it.pracuj.pl/praca?et=1%2C3%2C17&itth=38");
+        let response = match tech.as_str() {
+            "java" => reqwest::blocking::get("https://it.pracuj.pl/praca?et=1%2C3%2C17&itth=38"),
+            "python" => reqwest::blocking::get("https://it.pracuj.pl/praca?et=1%2C3%2C17&itth=37"),
+            _ => reqwest::blocking::get("https://it.pracuj.pl/praca?et=1%2C3%2C17&itth=38"),
+        };
         let html_content = response.unwrap().text().unwrap();
         let document = scraper::Html::parse_document(&html_content);
 
