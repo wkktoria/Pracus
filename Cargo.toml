@@ -1,0 +1,12 @@
+[package]
+name = "pracus"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.20", features = ["derive"] }
+eframe = "0.29.1"
+egui = "0.29.1"
+egui_extras = "0.29.1"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+scraper = "0.20.0"
