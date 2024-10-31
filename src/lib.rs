@@ -115,7 +115,12 @@ pub mod job_offers_scraper {
 
     impl fmt::Display for JobOffer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "Job offer with title: {}", self.title.clone().unwrap())
+            write!(
+                f,
+                "Job offer with title: {}, from: {}",
+                self.title.clone().unwrap(),
+                self.source.clone().unwrap().value()
+            )
         }
     }
 
