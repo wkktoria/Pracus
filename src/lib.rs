@@ -82,6 +82,28 @@ pub mod gui {
 }
 
 pub mod job_offers_scraper {
+    mod constants {
+        pub const JUST_JOIN_IT: &str = "justjoin.it";
+        pub const NO_FLUFF_JOBS: &str = "nofluffjobs.com";
+        pub const PRACUJ_PL: &str = "pracuj.pl";
+
+        pub const JUST_JOIN_IT_JOB_OFFER_SELECTOR: &str = "div.MuiBox-root.css-8xzgzu";
+        pub const NO_FLUFF_JOBS_JOB_OFFER_SELECTOR: &str = "a.posting-list-item";
+        pub const PRACUJ_PL_JOB_OFFER_SELECTOR: &str = "div.tiles_cobg3mp";
+
+        pub const JUST_JOIN_IT_TITLE_SELECTOR: &str = "h3.css-3hs82j";
+        pub const NO_FLUFF_JOBS_TITLE_SELECTOR: &str = "h3.posting-title__position";
+        pub const PRACUJ_PL_TITLE_SELECTOR: &str = "h2.tiles_h1p4o5k6";
+
+        pub const JUST_JOIN_IT_COMPANY_SELECTOR: &str = "span";
+        pub const NO_FLUFF_JOBS_COMPANY_SELECTOR: &str = "h4.company-name";
+        pub const PRACUJ_PL_COMPANY_SELECTOR: &str = "h3.tiles_chl8gsf.size-caption.core_t1rst47b";
+
+        pub const JUST_JOIN_IT_LOCATION_SELECTOR: &str = "span.css-1o4wo1x";
+        pub const NO_FLUFF_JOBS_LOCATION_SELECTOR: &str = "span.tw-text-right";
+        pub const PRACUJ_PL_LOCATION_SELECTOR: &str = "h4.size-caption.core_t1rst47b";
+    }
+
     use std::fmt;
 
     #[non_exhaustive]
@@ -96,9 +118,9 @@ pub mod job_offers_scraper {
     impl Source {
         pub fn value(&self) -> &str {
             match *self {
-                Source::JustJoinIt => "justjoin.it",
-                Source::NoFluffJobs => "nofluffjobs.com",
-                Source::PracujPl => "pracuj.pl",
+                Source::JustJoinIt => constants::JUST_JOIN_IT,
+                Source::NoFluffJobs => constants::NO_FLUFF_JOBS,
+                Source::PracujPl => constants::PRACUJ_PL,
                 Source::NotProvided => "-",
             }
         }
@@ -170,18 +192,24 @@ pub mod job_offers_scraper {
 
         let html_job_offers_selector = match source {
             Source::NotProvided => panic!("Invalid source"),
-            Source::JustJoinIt => scraper::Selector::parse("div.MuiBox-root.css-8xzgzu").unwrap(),
-            Source::NoFluffJobs => scraper::Selector::parse("a.posting-list-item").unwrap(),
-            Source::PracujPl => scraper::Selector::parse("div.tiles_cobg3mp").unwrap(),
+            Source::JustJoinIt => {
+                scraper::Selector::parse(constants::JUST_JOIN_IT_JOB_OFFER_SELECTOR).unwrap()
+            }
+            Source::NoFluffJobs => {
+                scraper::Selector::parse(constants::NO_FLUFF_JOBS_JOB_OFFER_SELECTOR).unwrap()
+            }
+            Source::PracujPl => {
+                scraper::Selector::parse(constants::PRACUJ_PL_JOB_OFFER_SELECTOR).unwrap()
+            }
         };
         let html_job_offers = document.select(&html_job_offers_selector);
 
         for html_job_offer in html_job_offers {
             let title_selector = match source {
                 Source::NotProvided => panic!("Invalid source"),
-                Source::JustJoinIt => "h3.css-3hs82j",
-                Source::NoFluffJobs => "h3.posting-title__position",
-                Source::PracujPl => "h2.tiles_h1p4o5k6",
+                Source::JustJoinIt => constants::JUST_JOIN_IT_TITLE_SELECTOR,
+                Source::NoFluffJobs => constants::NO_FLUFF_JOBS_TITLE_SELECTOR,
+                Source::PracujPl => constants::PRACUJ_PL_TITLE_SELECTOR,
             };
             let title = html_job_offer
                 .select(&scraper::Selector::parse(&title_selector).unwrap())
@@ -190,9 +218,9 @@ pub mod job_offers_scraper {
 
             let company_selector = match source {
                 Source::NotProvided => panic!("Invalid source"),
-                Source::JustJoinIt => "span",
-                Source::NoFluffJobs => "h4.company-name",
-                Source::PracujPl => "h3.tiles_chl8gsf.size-caption.core_t1rst47b",
+                Source::JustJoinIt => constants::JUST_JOIN_IT_COMPANY_SELECTOR,
+                Source::NoFluffJobs => constants::NO_FLUFF_JOBS_COMPANY_SELECTOR,
+                Source::PracujPl => constants::PRACUJ_PL_COMPANY_SELECTOR,
             };
             let company = html_job_offer
                 .select(&scraper::Selector::parse(&company_selector).unwrap())
@@ -201,9 +229,9 @@ pub mod job_offers_scraper {
 
             let location_selector = match source {
                 Source::NotProvided => panic!("Invalid source"),
-                Source::JustJoinIt => "span.css-1o4wo1x",
-                Source::NoFluffJobs => "span.tw-text-right",
-                Source::PracujPl => "h4.size-caption.core_t1rst47b",
+                Source::JustJoinIt => constants::JUST_JOIN_IT_LOCATION_SELECTOR,
+                Source::NoFluffJobs => constants::NO_FLUFF_JOBS_LOCATION_SELECTOR,
+                Source::PracujPl => constants::PRACUJ_PL_LOCATION_SELECTOR,
             };
             let location = html_job_offer
                 .select(&scraper::Selector::parse(&location_selector).unwrap())
