@@ -26,9 +26,16 @@ fn main() {
         panic!("Unavailable tech");
     }
 
-    let mut job_offers = job_offers_scraper::scrap_justjoinit_job_offers(&tech);
-    job_offers.append(&mut job_offers_scraper::scrap_nofluffjobs_job_offers(&tech));
-    job_offers.append(&mut job_offers_scraper::scrap_pracujpl_job_offers(&tech));
+    let mut job_offers =
+        job_offers_scraper::scrap_job_offers(job_offers_scraper::Source::JustJoinIt, &tech);
+    job_offers.append(&mut job_offers_scraper::scrap_job_offers(
+        job_offers_scraper::Source::NoFluffJobs,
+        &tech,
+    ));
+    job_offers.append(&mut job_offers_scraper::scrap_job_offers(
+        job_offers_scraper::Source::PracujPl,
+        &tech,
+    ));
 
     if !args.csv && !args.gui {
         panic!("Run with --csv or --gui option")
